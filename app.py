@@ -35,18 +35,16 @@ source = st.sidebar.radio("Select Source", ["Image Upload", "Webcam"])
 if source == "Image Upload":
 
     uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
-
+    
     if uploaded_file is not None:
-        image = Image.open(uploaded_file)
+        image = Image.open(uploaded_file).convert("RGB")   # ✅ FORCE 3 CHANNELS
         image_np = np.array(image)
-
+    
         st.image(image, caption="Uploaded Image", use_column_width=True)
-
-        # Run YOLO inference
+    
         results = model(image_np, conf=confidence)
-
+    
         annotated_frame = results[0].plot()
-
         st.image(annotated_frame, caption="Detection Result", use_column_width=True)
 
         # Detection Details
@@ -78,5 +76,6 @@ elif source == "Webcam":
             annotated_frame = results[0].plot()
 
             stframe.image(annotated_frame, channels="BGR")
+
 
         cap.release()
