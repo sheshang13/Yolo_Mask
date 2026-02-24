@@ -73,6 +73,4 @@ elif source == "Webcam":
         st.image(annotated_frame, caption="Detection Result", use_column_width=True)
 
 
-        cap.release()
-
 
