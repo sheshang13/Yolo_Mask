@@ -60,23 +60,19 @@ if source == "Image Upload":
 # -----------------------------
 elif source == "Webcam":
 
-    run = st.checkbox("Start Webcam")
+    camera_image = st.camera_input("Take a picture")
 
-    if run:
-        cap = cv2.VideoCapture(1)
-        stframe = st.empty()
+    if camera_image is not None:
+        image = Image.open(camera_image).convert("RGB")
+        image_np = np.array(image)
 
-        while run:
-            ret, frame = cap.read()
-            if not ret:
-                st.error("Failed to access webcam.")
-                break
+        results = model(image_np, conf=confidence)
 
-            results = model(frame, conf=confidence)
-            annotated_frame = results[0].plot()
+        annotated_frame = results[0].plot()
 
-            stframe.image(annotated_frame, channels="BGR")
+        st.image(annotated_frame, caption="Detection Result", use_column_width=True)
 
 
         cap.release()
+
 
